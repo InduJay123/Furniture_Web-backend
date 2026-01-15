@@ -16,5 +16,5 @@ def upload_image(image):
         {"content-type": image.content_type}
     )
 
-    public_url = supabase.storage.from_("product-images").get_public_url(file_path)
+    public_url = supabase.storage.from_("furniture_products").get_public_url(file_path)
     return public_url
