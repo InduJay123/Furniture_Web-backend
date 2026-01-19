@@ -4,6 +4,7 @@ from rest_framework import status
 from .models import Product
 from .serializers import ProductSerializer
 from .utils import upload_image
+from rest_framework.permissions import AllowAny
 
 from rest_framework.generics import ListAPIView
 
@@ -37,3 +38,4 @@ class ProductCreateView(APIView):
 class ProductListView(ListAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    permission_classes = [AllowAny] 
