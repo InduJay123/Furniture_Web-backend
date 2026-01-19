@@ -10,4 +10,27 @@ from products.models import Product
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def add_to_cart(request):
-    user = request.userproduct_id = request.data.get("product_id")
+    user = request.user
+    product_id = request.data.get("product_id")
+    quantity = int(request.data.get("quantity",1))
+
+    product = Product.objects.get(id=product_id)
+
+    if product.stock < quantity:
+        return Response({"error": "Insufficient stock"}, status=400)
+
+    cart = Cart.objects.get(user=user)
+
+    cart_item, created = CartItem.objects.get_or_create(
+        cart=cart, 
+        product=product
+    )
+
+    if not created:
+        cart_item.quantity += quantity
+    else:
+        cart_item.quantity = quantity
+
+    cart_item.save()
+
+    return Response({"message": "Product added to cart"})
