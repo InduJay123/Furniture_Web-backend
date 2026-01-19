@@ -7,3 +7,7 @@ from products.models import Product
 
 
 # Create your views here.
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def add_to_cart(request):
+    user = request.userproduct_id = request.data.get("product_id")
