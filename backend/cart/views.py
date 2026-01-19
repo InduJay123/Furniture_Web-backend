@@ -34,3 +34,29 @@ def add_to_cart(request):
     cart_item.save()
 
     return Response({"message": "Product added to cart"})
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def view_cart(request):
+    cart = Cart.objects.get(user=request.user)
+
+    items = []
+    subtotal = 0
+
+    for item in cart.items.all():
+        total_price = item.product.price * item.quantity
+        subtotal += total_price
+
+        items.append({
+            "id": item.id,
+            "product_id": item.product.id,
+            "name": item.product.name,
+            "price": item.product.price,
+            "quantity": item.quantity,
+            "total": total_price
+        })
+
+    return Response({
+        "items": items,
+        "subtotal": subtotal
+    })
