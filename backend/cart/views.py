@@ -4,6 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from .models import Cart, CartItem
 from products.models import Product
+from django.contrib.auth.models import User
 
 
 # Create your views here.
@@ -11,15 +12,16 @@ from products.models import Product
 @permission_classes([IsAuthenticated])
 def add_to_cart(request):
     user = request.user
+    print("REQUEST DATA:", request.data)
     product_id = request.data.get("product_id")
     quantity = int(request.data.get("quantity",1))
 
-    product = Product.objects.get(id=product_id)
+    try:
+        product = Product.objects.get(id=product_id)
+    except Product.DoesNotExist:
+        return Response({"error": "Product not found"}, status=404)
 
-    if product.stock < quantity:
-        return Response({"error": "Insufficient stock"}, status=400)
-
-    cart = Cart.objects.get(user=user)
+    cart, created = Cart.objects.get_or_create(user=user)
 
     cart_item, created = CartItem.objects.get_or_create(
         cart=cart, 
