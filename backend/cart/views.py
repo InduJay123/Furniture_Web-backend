@@ -55,10 +55,57 @@ def view_cart(request):
             "name": item.product.name,
             "price": item.product.price,
             "quantity": item.quantity,
-            "total": total_price
+            "total": total_price,
+            "category": item.product.category,
+            "image": item.product.image_url, 
         })
 
     return Response({
         "items": items,
         "subtotal": subtotal
     })
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def update_cart_item(request):
+    user = request.user
+    product_id = request.data.get("product_id")
+    action = request.data.get("action")
+
+    try:
+        product = Product.objects.get(id=product_id)
+    except Product.DoesNotExist:
+        return Response({"error": "Product not found"}, status=404)
+
+    cart, _ = Cart.objects.get_or_create(user=user)
+
+    try:
+        cart_item = CartItem.objects.get(cart=cart, product__id=product_id)
+    except (Cart.DoesNotExist, CartItem.DoesNotExist):
+        return Response({"error": "Cart item not found"}, status=404)
+
+    if action == "increment":
+        cart_item.quantity += 1
+    elif action == "decrement" and cart_item.quantity > 1:
+        cart_item.quantity -= 1
+    else:
+        return Response({"message": "Invalid action"})
+
+    cart_item.save()
+    return Response({"message": "Cart item updated", "quantity": cart_item.quantity})
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def remove_cart_item(request):
+    user = request.user
+    product_id = request.data.get("product_id")
+
+    cart = Cart.objects.get(user=user)
+
+    try:
+        cart_item = CartItem.objects.get(cart=cart, product_id=product_id)
+        cart_item.delete()
+        return Response({"message": "Cart item removed"})
+    except CartItem.DoesNotExist:
+        return Response({"error": "Cart item not found"}, status=404)   
