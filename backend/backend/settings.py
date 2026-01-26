@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'django.contrib.sites',
     'products',
-    'cart'
+    'cart',
+    'orders'
 ]
 
 MIDDLEWARE = [
