@@ -50,7 +50,7 @@ def place_order(request):
             "image": getattr(p, "image_url", None) if hasattr(p, "image_url") else None,
         }) 
 
-        shipping = Decimal("0.00")  # you can implement shipping rules
+    shipping = Decimal("0.00")  
     total = subtotal + shipping
 
     # 4) Create order
@@ -79,3 +79,13 @@ def place_order(request):
     cart_items.delete()
 
     return Response(OrderSerializer(order).data, status=status.HTTP_201_CREATED)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def list_orders(request):
+    order = (
+        Order.objects.filter(user=request.user)
+        .prefetch_related("items")
+        .order_by("-created_at")
+    )
+    return Response(OrderSerializer(order, many=True).data, status=status.HTTP_200_OK)

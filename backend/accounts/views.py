@@ -14,8 +14,6 @@ class RegisterView(generics.CreateAPIView):
     permission_classes = [AllowAny]
     queryset = User.objects.all()
     serializer_class = RegisterSerializer
-    permission_classes = [AllowAny]
-
 
 class EmailLoginView(APIView):
     permission_classes = [AllowAny]
@@ -37,3 +35,32 @@ class EmailLoginView(APIView):
             })
 
         return Response({"detail": "No active account found with the given credentials"}, status=401)
+
+class AdminLoginView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        email = request.data.get("email")
+        password = request.data.get("password")
+
+        try:
+            user_obj = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return Response({"detail": "Invalid credentials"}, status=401)
+
+        user = authenticate(username=user_obj.username, password=password)
+        if not user:
+            return Response({"detail": "Invalid credentials"}, status=401)
+
+        #Admin check
+        if not user.is_staff:
+            return Response({"detail": "Not an admin account"}, status=403)
+
+        refresh = RefreshToken.for_user(user)
+        return Response({
+            "refresh": str(refresh),
+            "access": str(refresh.access_token),
+            "is_admin": True,        
+            "username": user.username,
+            "email": user.email,
+        })
