@@ -4,11 +4,12 @@ from rest_framework import status
 from .models import Product
 from .serializers import ProductSerializer
 from .utils import upload_image
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny,IsAuthenticated,IsAdminUser
 
 from rest_framework.generics import ListAPIView
 
 class ProductCreateView(APIView):
+    permission_classes = [IsAuthenticated, IsAdminUser]
     def post(self, request):
         image = request.FILES.get('image')
 
