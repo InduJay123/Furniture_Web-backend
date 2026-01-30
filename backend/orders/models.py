@@ -4,7 +4,8 @@ from django.contrib.auth.models import User
 class Order(models.Model):
     STATUS_CHOICES = [
         ("PENDING", "Pending"),
-        ("PAID", "Paid"),
+        ("PACKING", "Packing"),
+        ("DELIVERED", "Delivered"),
         ("CANCELLED", "Cancelled"),
     ]
 
