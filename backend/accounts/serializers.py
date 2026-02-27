@@ -15,3 +15,15 @@ class RegisterSerializer(serializers.ModelSerializer):
             password=validated_data['password']
         )
         return user
+
+class CustomerAdminSerializer(serializers.ModelSerializer):
+    orders_count = serializers.IntegerField(read_only=True)
+    total_spent = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    last_order = serializers.DateTimeField(read_only=True)
+
+    class Meta:
+        model = User
+        fields = [
+            "id", "first_name", "last_name", "email",
+            "orders_count", "total_spent", "last_order",
+        ]

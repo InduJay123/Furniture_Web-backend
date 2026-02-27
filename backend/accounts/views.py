@@ -64,3 +64,27 @@ class AdminLoginView(APIView):
             "username": user.username,
             "email": user.email,
         })
+
+from django.contrib.auth.models import User
+from django.db.models import Count, Sum, Max
+from rest_framework.generics import ListAPIView
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+
+from orders.models import Order
+from .serializers import CustomerAdminSerializer
+
+class AdminCustomerListView(ListAPIView):
+    permission_classes = [IsAuthenticated, IsAdminUser]
+    serializer_class = CustomerAdminSerializer
+
+    def get_queryset(self):
+        qs = User.objects.filter(is_staff=False)
+
+        # join orders by related_name="orders" (Order model: user = ForeignKey(..., related_name="orders"))
+        qs = qs.annotate(
+            orders_count=Count("orders", distinct=True),
+            total_spent=Sum("orders__total"),
+            last_order=Max("orders__created_at"),
+        ).order_by("-last_order")
+
+        return qs
