@@ -1,7 +1,9 @@
 #!/bin/bash
 
-# Activate virtual environment if you have one
-# source venv/bin/activate   <-- uncomment if you have a venv
+# Activate virtual environment
+source /home/site/wwwroot/venv/bin/activate
+
+# Install requirements
 pip install -r requirements.txt
 python backend/manage.py migrate
 python backend/manage.py collectstatic --noinput
