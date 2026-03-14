@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-6(stlljf58+__okz^m*c#bdzgp!y8k+sgzx=qs5(%ltei)4nyc
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['yourappname.azurewebsites.net']
+ALLOWED_HOSTS = ['yourappname.azurewebsites.net',"furniture-backend-api.azurewebsites.net"]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # Application definition
 
@@ -49,13 +49,13 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware'
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware'
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -85,10 +85,15 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'furniture_db',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': 'localhost',
+        'USER': 'indunijayamanna@myshopdb1',
+        'PASSWORD': 'Test@123456',
+        'HOST': 'myshopdb1.mysql.database.azure.com',
         'PORT': '3306',
+        'OPTIONS': {
+            'ssl': {
+                'ca': os.path.join(BASE_DIR, 'BaltimoreCyberTrustRoot.crt.pem'),
+            },
+        },
     }
 }
 
