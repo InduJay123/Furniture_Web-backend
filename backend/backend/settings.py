@@ -28,7 +28,11 @@ SECRET_KEY = 'django-insecure-6(stlljf58+__okz^m*c#bdzgp!y8k+sgzx=qs5(%ltei)4nyc
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['yourappname.azurewebsites.net',"furniture-backend-api.azurewebsites.net"]
+ALLOWED_HOSTS = [
+    "furniture-backend-fphuhqdbcyhbg2gk.southeastasia-01.azurewebsites.net",
+    "localhost",
+    "127.0.0.1"
+]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # Application definition
 
@@ -49,7 +53,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'corsheaders.middleware.CorsMiddleware'
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -151,6 +155,11 @@ STATIC_URL = 'static/'
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
+    "https://nice-flower-0a9293200.1.azurestaticapps.net",
 ]
 
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = False
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://nice-flower-0a9293200.1.azurestaticapps.net"
+]
