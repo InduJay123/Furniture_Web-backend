@@ -89,7 +89,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'furniture_db',
-        'USER': 'indunijayamanna@myshopdb1',
+        'USER': 'indunijayamanna',
         'PASSWORD': 'Test@123456',
         'HOST': 'myshopdb1.mysql.database.azure.com',
         'PORT': '3306',
@@ -159,6 +159,29 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 CORS_ALLOW_ALL_ORIGINS = False
+
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOW_METHODS = [
+    "GET",
+    "POST",
+    "PUT",
+    "PATCH",
+    "DELETE",
+    "OPTIONS",
+]
+
+CORS_ALLOW_HEADERS = [
+    "accept",
+    "accept-encoding",
+    "authorization",
+    "content-type",
+    "dnt",
+    "origin",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
+]
 
 CSRF_TRUSTED_ORIGINS = [
     "https://nice-flower-0a9293200.1.azurestaticapps.net"
